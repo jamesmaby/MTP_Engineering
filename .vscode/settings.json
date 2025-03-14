@@ -1,0 +1,23 @@
+{
+    "cortex-debug.gdbPath": "/usr/bin/gdb-multiarch",
+    //"cortex-debug.JLinkGDBServerPath": "/usr/local/bin/JLinkGDBServer",
+    "cortex-debug.stutilPath": "/usr/local/bin/st-util",
+    "files.associations": {
+        "test_printf.h": "c",
+        "medelay.h": "c",
+        "mefifo.h": "c",
+        "mefiledescriptor.h": "c",
+        "meusart1.h": "c",
+        "meusartfd.h": "c",
+        "mefifofd.h": "c",
+        "meconsole.h": "c",
+        "main.h": "c",
+        "meconsolecarac.h": "c",
+        "time.h": "c",
+        "meconsolecommande.h": "c",
+        "stdbool.h": "c",
+        "stm32f0xx.h": "c",
+        "string.h": "c",
+        "stdarg.h": "c"
+    },
+}

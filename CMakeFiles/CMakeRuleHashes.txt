@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+4d19d791b91e0ec3d8a48bb9bfe95e8c CMakeFiles/gdbserver
+a96cf1295fff27d7924a65d4f969f4cf CMakeFiles/projstm32.hex
