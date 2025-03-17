@@ -12,6 +12,13 @@
 #include "meFIFOFD.h"
 #include "meConsole.h"
 
+#define DEF_CONS(_name, _size) ctx_cons_t ctx_cons; \
+char buff_cons_##_name[_size]; \
+char buff_seq_##_name [6]; \
+ctx_cons.buff_seq = buff_seq_##_name; \
+ctx_cons.buffer = buff_cons_##_name; \
+static delay_t cons_delay_##_name; \
+ctx_cons.delay_cons = &cons_delay_##_name;
 
 
 uint8_t	rx_byte;
@@ -40,14 +47,11 @@ int main(void)
 	MEPIN_SET( PIN_LED0 );
 
 	me_sd_t me_sd;
-	ctx_cons_t ctx_cons;
 
-	static delay_t console_delay;
-	ctx_cons.delay_cons = &console_delay;
+	DEF_CONS(cons_1, 64);
 
 	fd_FIFO_USART1_Init(&me_sd,&fifo_Rx,&fifo_Tx);
 	console_Init(&ctx_cons,&me_sd);
-
 
     while(1)
     {
@@ -58,34 +62,6 @@ int main(void)
 
 		if( meDelay(&delay_main) == 1 ){
 			MEPIN_SWAP( PIN_LED0 );
-
-			/* fonctions de test_printf.c */
-			// sprintf(buffer,size,"Valeur : %d, hex : %x, string : %-10s\n",854, 0x2A3, "jimibi");
-			// SendString(buffer);
-			
-			//USART1_printf("Valeur: %d, Hex: %x, String: %-10s\n", 4567, 0x15F2, "james");
-
-			/* fonctions de meFileDescriptor.c */
-
-			// Test du me_sd_Printf()
-			//me_sd_Printf(&me_sd,"name : %s %20s : %-10s \r\n","je suis","PAS TRES TRES","CONTENT");
-			// me_sd_Printf(&me_sd,"String: %x \r\n",me_sd_Read(&me_sd,buffer,1));
-
-			// Test du me_sd_Print()
-			//SendNb(me_sd_Print( &me_sd, buffer));
-
-			// Test du me_sd_Read()
-			// 	int bytesRead = me_sd_Read(&me_sd, buffer, 1);
-			// 	if (bytesRead > 0) {
-			// 		buffer[bytesRead] = '\0';  
-			// 		SendNb(bytesRead);
-			// 		SendString(buffer);
-			// 	}
-
-			// Test du me_sd_Write()
-			//SendNb(me_sd_Write(&me_sd,buffer,9));		
-
-			// SendString("\r\n");
 			meDelayInit(&delay_main,birthday);
 		}
     }

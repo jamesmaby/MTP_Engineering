@@ -29,6 +29,9 @@ typedef struct {
     char *buffer;
     uint16_t index;
     uint16_t current_size;
+
+    uint16_t size_mem;
+
     uint8_t is_esc;
     uint8_t is_print;
     uint8_t index_seq;
@@ -38,17 +41,11 @@ typedef struct {
     char* argv[CON_ARGC_MAX];
     uint8_t argc;
 
-    void *com_cmd_desc;
+    const void *com_cmd_desc;
 
     void *ctx_mem[CON_CTX_CMD];
     bool is_interactive;
 
-    // char back_seq[CON_BACK_SIZE][CONS_BUFFER_SIZE];
-    // uint8_t index_back_seq;
-
-    uint8_t back_head;  
-    uint8_t back_tail;  
-    uint8_t back_size;  
     uint8_t history_index;  
 
 }ctx_cons_t;

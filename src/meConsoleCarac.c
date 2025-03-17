@@ -79,7 +79,6 @@ void console_UpArrow(ctx_cons_t *ctx) {
 
     me_sd_Printf(ctx->pme_sd, "\r\x1B[K");
 
-    // Récupérer la commande précédente
     if (!console_GetPreviousCommand(ctx, ctx->buffer)) {
         return;
     }
@@ -133,14 +132,16 @@ void console_Carac (ctx_cons_t *ctx, char c){
 
     if (ctx->index < (CONS_BUFFER_SIZE - 1) && ctx->current_size < (CONS_BUFFER_SIZE)) {
         // Décaler les caractères à droite de l'index pour insérer un nouveau caractère
-        memmove(&ctx->buffer[ctx->index + 1], &ctx->buffer[ctx->index], ctx->current_size - ctx->index);
-        ctx->buffer[ctx->index++] = c;
+        memmove(&ctx->buffer[(ctx->index + 1) & (CONS_BUFFER_SIZE - 1)], &ctx->buffer[ctx->index], ctx->current_size - ctx->index);
+        ctx->buffer[ctx->index] = c;
+        ctx->index++;
+        ctx->index &= CONS_BUFFER_SIZE - 1;
         ctx->current_size++;
         ctx->buffer[ctx->current_size] = '\0';
 
-        me_sd_Print(ctx->pme_sd, "\r\x1B[K");  
-        console_Prompt(ctx);     
-        // strcpy(temp,ctx->buffer);      
+        me_sd_Print(ctx->pme_sd, "\r\x1B[K");
+        console_Prompt(ctx);
+        // strcpy(temp,ctx->buffer);
         me_sd_Print(ctx->pme_sd, ctx->buffer); 
 
         char reposition[10];
@@ -176,11 +177,11 @@ void console_AddToHistory(ctx_cons_t *ctx, const char *cmd) {
 
 bool console_GetPreviousCommand(ctx_cons_t *ctx, char *dest) {
 
-    char temp[CONS_BUFFER_SIZE];
-    if (ctx->current_size == 0) return false;
-
-    //strcpy(temp,&ctx->back_buffer);
-    ctx->index = strlen(temp);
+    uint8_t i = 1;
+    while (ctx->buffer++){
+        i++;
+    }
+    memmove(dest,ctx->buffer+i,strlen(ctx->buffer+i)+1);
 
     return true;
 }

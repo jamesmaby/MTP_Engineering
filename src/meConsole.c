@@ -1,6 +1,5 @@
 #include "meConsole.h"
-
-
+#include "meConsoleCarac.h"
 
 #define PRINT(...) me_sd_Printf(ctx->pme_sd, __VA_ARGS__)
 
@@ -47,7 +46,6 @@ COMMANDE(reboot, "reboot", "Reboot le système", "reboot", console_fn_Reboot);
 COMMANDE(echo, "echo", "Affiche le texte sur le terminal", "echo", console_fn_Echo);
 COMMANDE(clear, "clear", "Clear la console", "clear", console_fn_Clear);
 COMMANDE(pong, "pong", "Voici le fonctionnement de pong", "pong", console_fn_Pong);
-COMMANDE(empty, "", "", "", NULL);  // Entrée vide pour marquer la fin
     
 SEQUENCE
 
@@ -56,25 +54,15 @@ void console_Init(ctx_cons_t *pctx_cons, me_sd_t *pme_sd){
 
     pctx_cons->pme_sd = pme_sd;
 
-    static char buff[6];
-    static char buff_cons[CONS_BUFFER_SIZE];
-
-    pctx_cons->buffer = buff_cons;
     pctx_cons->is_esc = 0;
     pctx_cons->is_print = 0;
     pctx_cons->current_size = 0;
     pctx_cons->index = 0;
     pctx_cons->index_seq = 0;
-    pctx_cons->buff_seq = buff;
     pctx_cons->argc = 0;
     pctx_cons->is_interactive = 0;
 
-    pctx_cons->back_head = 0;  
-    pctx_cons->back_tail = 0;  
-    pctx_cons->back_size = 0;  
     pctx_cons->history_index = 0;  
-
-    // pctx_cons->index_back_seq = 0;
     
     for (int i = 0; i < CON_ARGC_MAX; i++) {
         pctx_cons->argv[i] = NULL;
@@ -154,6 +142,7 @@ char console_Reading(ctx_cons_t *ctx) {
         return NO_INPUT;  
     }
     
+
     if (ctx->is_esc) {
         ctx->buff_seq[ctx->index_seq++] = c;
         seq:
@@ -225,7 +214,7 @@ cons_cmd_rc_t console_match_cmd(ctx_cons_t *ctx) {
 
     for (int i = 0; i < ctx->argc; i++) {
 
-        while (cmd < cmd_end) { // Parcours dynamique sans tableau fixe
+        while (cmd < cmd_end) {
             if (cmd->fnCon != NULL && !strcmp(*pav, cmd->name)) {
                 ctx->com_cmd_desc = cmd;
                 return cmd->fnCon(ctx);
